@@ -2,10 +2,23 @@
 
 ## 1. System Design
 
+### Core actions
+
+- Add pet & info
+- Add/edit tasks and info
+- Generate schedule plan
+
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+The initial UML centers on five classes covering the three core actions (add pet, add/edit tasks, generate plan):
+
+- **Pet** — holds info about a single animal (`name`, `species`, `breed`, `age_years`, `notes`). `update_info()` lets the owner edit any field.
+- **Owner** — the user. Owns a list of `Pet`s plus the day-level constraint `daily_minutes_available` and a loose `preferences` dict. `add_pet()` and `update_info()` cover the "add pet & info" action.
+- **Task** — one care task tied to a pet (`title`, `duration_minutes`, `priority`, optional `category`, `notes`). `update()` covers the "edit tasks" action.
+- **Scheduler** — pure logic. Holds an `Owner` and `tasks` list. `sort_tasks()` orders by priority then duration; `build_plan()` greedily fills the day budget; `explain_choice()` produces per-task reasoning.
+- **Plan** — the output. Carries `scheduled` and `skipped` task lists (each with a reason), `total_minutes_used`, and `day_budget`. `render()` returns rows for the Streamlit table; `explain()` returns a narrative.
+
+Relationships: `Owner 1—* Pet`, `Pet 1—* Task`, `Scheduler` uses `Owner`/`Task` and produces a `Plan`. Splitting `Scheduler` from `Plan` keeps scheduling logic separate from the UI-facing output object so each can be tested on its own.
 
 **b. Design changes**
 

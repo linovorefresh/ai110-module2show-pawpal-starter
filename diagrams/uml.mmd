@@ -1,12 +1,15 @@
 classDiagram
-    %% PawPal+ initial design. Update as the implementation evolves.
+    %% PawPal+ current design (notes-as-tasks). Update as the implementation evolves.
 
     class Pet {
         +str name
         +str species
         +str breed
         +int age_years
-        +str notes
+        +list~str~ notes
+        +add_note(text) None
+        +edit_note(index, new_text) None
+        +remove_note(index) None
         +update_info(**fields) None
     }
 
@@ -20,22 +23,20 @@ classDiagram
     }
 
     class Task {
-        +str id
-        +Pet pet
         +str title
-        +int duration_minutes
         +str priority
-        +str category
-        +str notes
-        +update(**fields) None
+        +str start
+        +str end
+        +int duration_minutes
+        +str pet_name
+        +str raw
     }
 
     class Scheduler {
         +Owner owner
-        +list~Task~ tasks
-        +sort_tasks() list~Task~
+        +tasks() list~Task~
+        +sort_tasks(tasks) list~Task~
         +build_plan() Plan
-        +explain_choice(task) str
     }
 
     class Plan {
@@ -48,7 +49,6 @@ classDiagram
     }
 
     Owner "1" --> "*" Pet : has
-    Pet "1" --> "*" Task : has
     Scheduler --> Owner : uses
-    Scheduler --> Task : uses
+    Scheduler ..> Task : produces
     Scheduler --> Plan : produces

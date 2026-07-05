@@ -22,8 +22,9 @@ Relationships: `Owner 1—* Pet`, `Pet 1—* Task`, `Scheduler` uses `Owner`/`Ta
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+`Task` was reshaped rather than removed. `Pet.notes` became `list[str]` — a free-text field where each entry is parsed at scheduling time into a `Task` dataclass (title, priority, start, end, duration). The user commits to a convention — two 4-digit military-time tokens for start/end and a `high|normal|low` priority keyword — with defaults (`normal`, `0700`, `0800`) when tokens are absent.
+
+Why: a single free-text field is a lower-friction input than four separate form controls, and putting the task data directly on the pet gives one source of truth. The tradeoff is that the scheduler now depends on string parsing, so parser tests carry more weight (priority variants, time extraction, invalid time ranges) than they would with typed `Task` fields.
 
 ---
 

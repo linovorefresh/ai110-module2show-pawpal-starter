@@ -78,6 +78,22 @@ def test_sort_tasks_orders_by_priority_then_start():
     assert [t.title for t in ordered] == ["urgent", "early", "late"]
 
 
+def test_sort_tasks_returns_chronological_order_within_same_priority():
+    """Sorting Correctness: same-priority tasks come back in chronological order."""
+    owner = Owner("O", daily_minutes_available=500)
+    pet = Pet("P", "dog")
+    owner.add_pet(pet)
+    pet.add_note("noon normal 1200 1230")
+    pet.add_note("dawn normal 0600 0630")
+    pet.add_note("dusk normal 1800 1830")
+    pet.add_note("morning normal 0900 0930")
+
+    sched = Scheduler(owner)
+    ordered = sched.sort_tasks(sched.tasks())
+    assert [t.title for t in ordered] == ["dawn", "morning", "noon", "dusk"]
+    assert [t.start for t in ordered] == ["0600", "0900", "1200", "1800"]
+
+
 # ---------- Scheduler.build_plan ----------
 
 def test_build_plan_respects_daily_budget():

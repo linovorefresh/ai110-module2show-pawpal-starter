@@ -59,19 +59,37 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 
 ## 🧪 Testing PawPal+
 
-```bash
-# Run the full test suite:
-pytest
+Run the full test suite from the repo root:
 
-# Run with coverage:
+```bash
+python -m pytest
+# Or with coverage:
 pytest --cov
 ```
+
+The suite in `tests/test_pawpal.py` covers:
+
+- **Note parsing** — `parse_note` extracts title, priority, and start/end times; applies defaults when tokens are missing; is case-insensitive for priority; strips the `priority` decorator word; consumes only the first two time tokens; and still parses inverted ranges.
+- **Sorting correctness** — `Scheduler.sort_tasks` orders tasks by priority first, then chronologically by start time within the same priority.
+- **Plan building** — `Scheduler.build_plan` respects the owner's daily minute budget, skips tasks with invalid time ranges, returns an empty plan when no pets are registered, and aggregates tasks across multiple pets.
+- **Pet note management** — `Pet.add_note`, `edit_note`, and `remove_note` add, update, and delete notes and reject empty input.
+- **Task return type** — `Scheduler.tasks()` returns `Task` instances.
 
 Sample test output:
 
 ```
 # Paste your pytest output here
+=================================================================================== test session starts ====================================================================================
+platform darwin -- Python 3.14.5, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/catalino/Desktop/vid-rec/codepath/module2/ai110-module2show-pawpal-starter
+plugins: anyio-4.14.1
+collected 16 items                                                                                                                                                                         
+
+tests/test_pawpal.py ................                                                                                                                                                [100%]
+
+==================================================================================== 16 passed in 0.07s ====================================================================================
 ```
+Confidence Level 4 stars
 
 ## 📐 Smarter Scheduling
 
